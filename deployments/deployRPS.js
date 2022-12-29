@@ -6,7 +6,7 @@ async function main() {
     console.log("Account balance:", (await deployer.getBalance()).toString());
   
     const RPS = await ethers.getContractFactory("RPS");
-    const rps = await RPS.deploy('testRPS', 'TST');
+    const rps = await RPS.deploy();
   
     console.log("Token address:", rps.address);
   }

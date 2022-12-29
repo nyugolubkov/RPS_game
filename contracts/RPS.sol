@@ -2,14 +2,9 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 contract RPS {
-    event GetGameOutcome(GameOutcome);
+    uint constant MIN_BET = 1000;
 
-    enum GameStatus {
-        nonExistent,
-        started,
-        participated,
-        ended
-    }
+    event GetGameOutcome(GameOutcome);
 
     enum GameOutcome {
         draw,
@@ -17,98 +12,137 @@ contract RPS {
         playerTwo
     }
 
-    struct Game {
-        address playerOne;
-        address playerTwo;
-        uint stake;
-        uint  playerOneChoice;
-        uint  playerTwoChoice;
-        bytes32 playerOneHash;
-        bytes32 playerTwoHash;
-        GameStatus  status;
-        GameOutcome outcome;
+    enum GameChoice {
+        none,
+        rock,
+        paper,
+        scissors
     }
 
-    mapping (address => Game) public games;
-    mapping (address => uint) public playerBalances;
+    address payable playerOne;
+    address payable playerTwo;
 
-    modifier HashOpponent(bytes32 gameHash, address opponent, uint gameStake) {
-        require(gameHash != "", "game hash was not provided");
-        require(opponent != address(0x0) && opponent != msg.sender, "Problem with other player...");
-        require(gameStake <= playerBalances[msg.sender], "Players funds are insufficient");
+    uint public stake;
+    GameOutcome public outcome;
+
+    GameChoice private playerOneChoice;
+    GameChoice private playerTwoChoice;
+
+    bytes32 private playerOneHash;
+    bytes32 private playerTwoHash;
+
+    modifier validBet() {
+        require(msg.value >= MIN_BET, "Bet is lower than possible minimum");
+        require(stake == 0 || msg.value >= stake, "Problem with the stake");
         _;
     }
 
-    function startGame(bytes32 gameHash, address opponent, uint gameStake) external HashOpponent(gameHash, opponent, gameStake) {
-        require(games[msg.sender].status == GameStatus.nonExistent, "Problem with game status...");
-
-        playerBalances[msg.sender] = playerBalances[msg.sender] - gameStake;
-        
-        games[msg.sender].playerOneHash = gameHash;
-        games[msg.sender].playerOne = msg.sender;
-        games[msg.sender].playerTwo = opponent;
-        games[msg.sender].stake = gameStake;
-        games[msg.sender].status = GameStatus.started;
+    modifier notRegistered() {
+        require(msg.sender != playerOne && msg.sender != playerTwo, "This player has already registered");
+        _;
     }
 
-    function participateGame(bytes32 gameHash, address opponent) external HashOpponent(gameHash, opponent, games[opponent].stake) {
-        require(games[opponent].playerTwo == msg.sender, "You are not Player 2 for this game");
-        require(games[opponent].status == GameStatus.started, "Game not started or has already been participated in");
-
-        uint gameStake = games[opponent].stake;
-        playerBalances[msg.sender] = playerBalances[msg.sender] - gameStake;
-
-        games[opponent].playerTwoHash = gameHash;
-        games[opponent].status = GameStatus.participated;
+    modifier hasRegistered() {
+        require (msg.sender == playerOne || msg.sender == playerTwo, "Not registered player yet");
+        _;
     }
 
-    function revealChoice(uint choice, bytes32 salt, address playerOne) external {        
-        require(games[playerOne].status == GameStatus.participated, "Game does not exist or player Two has not placed a bet yet");                
-       
-        if(games[playerOne].playerOne == msg.sender) {
-            require(games[playerOne].playerOneHash == getSaltedHash(choice, salt), "problem with salt");
-            games[playerOne].playerOneChoice = choice;
-        } else if(games[playerOne].playerTwo == msg.sender) {
-            require(games[playerOne].playerTwoHash == getSaltedHash(choice, salt), "problem with salt");
-            games[playerOne].playerTwoChoice = choice;
+    modifier hashProvided(bytes32 gameHash) {
+        require(gameHash != "", "Game hash was not provided");
+        _;
+    }
+
+    modifier correctChoice(uint choice) {
+        require (choice >= 1 && choice <= 3, "Incorrect choice");
+        _;
+    }
+
+    modifier committed() {
+        require(playerOneHash != 0x0 && playerTwoHash != 0x0);
+        _;
+    }
+
+    modifier revealed() {
+        require(playerOneChoice != GameChoice.none && playerTwoChoice != GameChoice.none);
+        _;
+    }
+
+    function regPlayer() public payable validBet notRegistered returns (uint) {
+        if (playerOne == address(0x0)) {
+            playerOne = payable(msg.sender);
+            stake = msg.value;
+            return 1;
+        } else if (playerTwo == address(0x0)) {
+            playerTwo = payable(msg.sender);
+            return 2;
+        }
+        return 0;
+    }
+
+    function commitMove(bytes32 gameHash) public hasRegistered hashProvided(gameHash) returns (bool) {
+        if (msg.sender == playerOne && playerOneHash == 0x0) {
+            playerOneHash = gameHash;
+        } else if (msg.sender == playerTwo && playerTwoHash == 0x0) {
+            playerTwoHash = gameHash;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    function revealChoice(uint choice, bytes32 salt) public hasRegistered correctChoice(choice) committed returns (GameChoice) {
+        if(playerOne == msg.sender) {
+            require(playerOneHash == getSaltedHash(choice, salt), "problem with salt");
+            playerOneChoice = GameChoice(choice);
+            return playerOneChoice;
+        } else if(playerTwo == msg.sender) {
+            require(playerTwoHash == getSaltedHash(choice, salt), "problem with salt");
+            playerTwoChoice = GameChoice(choice);
+            return playerTwoChoice;
         } else {
             revert("Problem with addresses");
         }
     }
-    
-    function endGame(address playerOne) external returns(GameOutcome gameResult) {
-        require(
-          games[playerOne].playerOneChoice > 0 &&
-          games[playerOne].playerTwoChoice > 0 ,
-          "Both players need to reveal their choice before game can be completed"
-        );
 
-        address playerTwo = games[playerOne].playerTwo;
-        uint playerOneChoice = games[playerOne].playerOneChoice;
-        uint playerTwoChoice = games[playerOne].playerTwoChoice;
-        uint stake = games[playerOne].stake;
+    function endGames() external revealed returns(GameOutcome) {
+        outcome = GameOutcome((3 + uint(playerOneChoice) - uint(playerTwoChoice)) % 3);
 
-        gameResult = GameOutcome((3 + playerOneChoice - playerTwoChoice) % 3);
+        if (outcome == GameOutcome.playerOne) {
+            playerOne.transfer(address(this).balance);
+        } else if (outcome == GameOutcome.playerTwo) {
+            playerTwo.transfer(address(this).balance);
+        } else {
+            playerOne.transfer(stake);
+            playerTwo.transfer(address(this).balance);
+        }
+        
+        emit GetGameOutcome(outcome);
+        return outcome;
+    }
 
-        if(gameResult == GameOutcome.draw){
-            playerBalances[playerOne] = playerBalances[playerOne] + stake;
-            playerBalances[playerTwo] = playerBalances[playerTwo] + stake;
-        }
-        else if(gameResult == GameOutcome.playerOne){
-            playerBalances[playerOne] = playerBalances[playerOne] + stake * 2;
-        }
-        else if(gameResult == GameOutcome.playerTwo){
-            playerBalances[playerTwo] = playerBalances[playerTwo] + stake * 2;
-        }
-        else{
-            revert("Invalid Game Outcome");
-        }
-
-        emit GetGameOutcome(gameResult);
-        return gameResult;
+    function reset() private {
+        stake = 0;
+        playerOne = payable(address(0x0));
+        playerTwo = payable(address(0x0));
+        playerOneHash = 0x0;
+        playerTwoHash = 0x0;
+        playerOneChoice = GameChoice.none;
+        playerTwoChoice = GameChoice.none;
     }
     
     function getSaltedHash(uint answer, bytes32 salt) internal pure returns (bytes32) {
        return keccak256(abi.encodePacked(answer, salt));
+    }
+
+    function getContractBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+
+    function bothCommitted() public view returns (bool) {
+        return (playerOneHash != 0x0 && playerTwoHash != 0x0);
+    }
+
+    function bothRevealed() public view returns (bool) {
+        return (playerOneChoice != GameChoice.none && playerTwoChoice != GameChoice.none);
     }
 }
