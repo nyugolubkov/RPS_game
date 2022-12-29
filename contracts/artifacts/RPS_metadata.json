@@ -1,0 +1,220 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "enum RPS.GameOutcome",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"name": "GetGameOutcome",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "playerOne",
+						"type": "address"
+					}
+				],
+				"name": "endGame",
+				"outputs": [
+					{
+						"internalType": "enum RPS.GameOutcome",
+						"name": "gameResult",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "games",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "playerOne",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "playerTwo",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stake",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "playerOneChoice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "playerTwoChoice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "playerOneHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "playerTwoHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "enum RPS.GameStatus",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum RPS.GameOutcome",
+						"name": "outcome",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "gameHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "opponent",
+						"type": "address"
+					}
+				],
+				"name": "participateGame",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "playerBalances",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "choice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "salt",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "playerOne",
+						"type": "address"
+					}
+				],
+				"name": "revealChoice",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "gameHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "opponent",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "gameStake",
+						"type": "uint256"
+					}
+				],
+				"name": "startGame",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/RPS.sol": "RPS"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/RPS.sol": {
+			"keccak256": "0xd4b44478f47d238cb2272b6fbd8d059ea0ad36c6f5492337402fc6d098853373",
+			"license": "LGPL-3.0-only",
+			"urls": [
+				"bzz-raw://5a276352b72d16b24e5b08de3f2ed5c3abde88978c7d027cd71810ba70aab95d",
+				"dweb:/ipfs/QmRoQYeBEqgMJtHxvmUz2uSDTeexu3ZpfKaKRFwPhf5afr"
+			]
+		}
+	},
+	"version": 1
+}
