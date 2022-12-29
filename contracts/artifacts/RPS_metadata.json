@@ -19,78 +19,26 @@
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "playerOne",
-						"type": "address"
-					}
-				],
-				"name": "endGame",
+				"inputs": [],
+				"name": "bothCommitted",
 				"outputs": [
 					{
-						"internalType": "enum RPS.GameOutcome",
-						"name": "gameResult",
-						"type": "uint8"
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "games",
+				"inputs": [],
+				"name": "bothRevealed",
 				"outputs": [
 					{
-						"internalType": "address",
-						"name": "playerOne",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "playerTwo",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "stake",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "playerOneChoice",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "playerTwoChoice",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "playerOneHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "playerTwoHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "enum RPS.GameStatus",
-						"name": "status",
-						"type": "uint8"
-					},
-					{
-						"internalType": "enum RPS.GameOutcome",
-						"name": "outcome",
-						"type": "uint8"
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -102,27 +50,35 @@
 						"internalType": "bytes32",
 						"name": "gameHash",
 						"type": "bytes32"
-					},
-					{
-						"internalType": "address",
-						"name": "opponent",
-						"type": "address"
 					}
 				],
-				"name": "participateGame",
-				"outputs": [],
+				"name": "commitMove",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "endGames",
+				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "enum RPS.GameOutcome",
 						"name": "",
-						"type": "address"
+						"type": "uint8"
 					}
 				],
-				"name": "playerBalances",
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getContractBalance",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -131,6 +87,32 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "outcome",
+				"outputs": [
+					{
+						"internalType": "enum RPS.GameOutcome",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "regPlayer",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -144,39 +126,30 @@
 						"internalType": "bytes32",
 						"name": "salt",
 						"type": "bytes32"
-					},
-					{
-						"internalType": "address",
-						"name": "playerOne",
-						"type": "address"
 					}
 				],
 				"name": "revealChoice",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "enum RPS.GameChoice",
+						"name": "",
+						"type": "uint8"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "gameHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "address",
-						"name": "opponent",
-						"type": "address"
-					},
+				"inputs": [],
+				"name": "stake",
+				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "gameStake",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "startGame",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -208,11 +181,11 @@
 	},
 	"sources": {
 		"contracts/RPS.sol": {
-			"keccak256": "0xd4b44478f47d238cb2272b6fbd8d059ea0ad36c6f5492337402fc6d098853373",
+			"keccak256": "0xa855a7186e8c0af5c8858259f7e17e947ad2a91ed54dfb4de9b0c5895b76b344",
 			"license": "LGPL-3.0-only",
 			"urls": [
-				"bzz-raw://5a276352b72d16b24e5b08de3f2ed5c3abde88978c7d027cd71810ba70aab95d",
-				"dweb:/ipfs/QmRoQYeBEqgMJtHxvmUz2uSDTeexu3ZpfKaKRFwPhf5afr"
+				"bzz-raw://d94fa0137ced83e3648bf92bae3a7811277392429b32b57da2c144e09f494ad0",
+				"dweb:/ipfs/QmeXWustEYp3vPRiTCxW5RLRBB6gxd2Feuarbi1p2CGsTg"
 			]
 		}
 	},
