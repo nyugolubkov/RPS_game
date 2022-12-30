@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Пользователь\\Desktop\\Мои файлы\\Учеба 4 курс\\СМК\\hardhat-new\\game\\contracts\\RPS.sol": {
-      "lastModificationDate": 1672254939564,
-      "contentHash": "70912d5e46947b59783173a16fe09f94",
+      "lastModificationDate": 1672338109096,
+      "contentHash": "d50048ed4a3ef05eff39d848a93adc84",
       "sourceName": "contracts/RPS.sol",
       "solcConfig": {
         "version": "0.8.17",
