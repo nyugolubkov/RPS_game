@@ -4,6 +4,9 @@ pragma solidity >=0.8.0 <0.9.0;
 contract RPS {
     uint constant MIN_BET = 1000;
 
+    event GameRegister(uint);
+    event GameCommit(bool);
+    event GameReveal(GameChoice);
     event GetGameOutcome(GameOutcome);
 
     enum GameOutcome {
@@ -71,11 +74,14 @@ contract RPS {
         if (playerOne == address(0x0)) {
             playerOne = payable(msg.sender);
             stake = msg.value;
+            emit GameRegister(1);
             return 1;
         } else if (playerTwo == address(0x0)) {
             playerTwo = payable(msg.sender);
+            emit GameRegister(2);
             return 2;
         }
+        emit GameRegister(0);
         return 0;
     }
 
@@ -85,8 +91,10 @@ contract RPS {
         } else if (msg.sender == playerTwo && playerTwoHash == 0x0) {
             playerTwoHash = gameHash;
         } else {
+            emit GameCommit(false);
             return false;
         }
+        emit GameCommit(true);
         return true;
     }
 
@@ -94,10 +102,12 @@ contract RPS {
         if(playerOne == msg.sender) {
             require(playerOneHash == getSaltedHash(choice, salt), "problem with salt");
             playerOneChoice = GameChoice(choice);
+            emit GameReveal(playerOneChoice);
             return playerOneChoice;
         } else if(playerTwo == msg.sender) {
             require(playerTwoHash == getSaltedHash(choice, salt), "problem with salt");
             playerTwoChoice = GameChoice(choice);
+            emit GameReveal(playerTwoChoice);
             return playerTwoChoice;
         } else {
             revert("Problem with addresses");
@@ -136,6 +146,20 @@ contract RPS {
 
     function getContractBalance() public view returns (uint) {
         return address(this).balance;
+    }
+
+    function isRegistered(address player) public view returns (bool) {
+        return (playerOne == player || playerTwo == player);
+    }
+
+    function isCommitted(address player) public view returns (bool) {
+        return (playerOne == player && playerOneHash != 0x0 || 
+                playerTwo == player && playerTwoHash != 0x0);
+    }
+
+    function isRevealed(address player) public view returns (bool) {
+        return (playerOne == player && playerOneChoice != GameChoice.none || 
+                playerTwo == player && playerTwoChoice != GameChoice.none);
     }
 
     function bothCommitted() public view returns (bool) {

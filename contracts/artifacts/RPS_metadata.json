@@ -10,6 +10,45 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"name": "GameCommit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "GameRegister",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "enum RPS.GameChoice",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"name": "GameReveal",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "enum RPS.GameOutcome",
 						"name": "",
 						"type": "uint8"
@@ -84,6 +123,63 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player",
+						"type": "address"
+					}
+				],
+				"name": "isCommitted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player",
+						"type": "address"
+					}
+				],
+				"name": "isRegistered",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "player",
+						"type": "address"
+					}
+				],
+				"name": "isRevealed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -181,11 +277,11 @@
 	},
 	"sources": {
 		"contracts/RPS.sol": {
-			"keccak256": "0xa855a7186e8c0af5c8858259f7e17e947ad2a91ed54dfb4de9b0c5895b76b344",
+			"keccak256": "0x0ea32feb17c8a99c57a0a04ad5f95d311209c864742e2820b0f59468bed64e48",
 			"license": "LGPL-3.0-only",
 			"urls": [
-				"bzz-raw://d94fa0137ced83e3648bf92bae3a7811277392429b32b57da2c144e09f494ad0",
-				"dweb:/ipfs/QmeXWustEYp3vPRiTCxW5RLRBB6gxd2Feuarbi1p2CGsTg"
+				"bzz-raw://5081cd542f28feaf309e63efd0034ee7bd3cbe8ffcb65b392fa90be3bc857db8",
+				"dweb:/ipfs/QmaMChTgewUPtQcsvPJ8MTKmDKyUrYdskc4a5DpHqNTtwp"
 			]
 		}
 	},
