@@ -61,12 +61,17 @@ contract RPS {
     }
 
     modifier committed() {
-        require(playerOneHash != 0x0 && playerTwoHash != 0x0);
+        require(playerOneHash != 0x0 && playerTwoHash != 0x0, "One of the players or both did not registered");
         _;
     }
 
     modifier revealed() {
-        require(playerOneChoice != GameChoice.none && playerTwoChoice != GameChoice.none);
+        require(playerOneChoice != GameChoice.none && playerTwoChoice != GameChoice.none, "One of the players or both did not commit");
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == address(0x91cDa83c363A6F72f81A2041836b1e79b4a01Ab1), "Only owner of contract is allowed to this method");
         _;
     }
 
@@ -125,9 +130,19 @@ contract RPS {
             playerOne.transfer(stake);
             playerTwo.transfer(address(this).balance);
         }
+
+        reset();
         
         emit GetGameOutcome(outcome);
         return outcome;
+    }
+
+    function resetExternal() external onlyOwner {
+        reset();
+    }
+
+    function increaseStake(uint addStake) external onlyOwner {
+        stake += addStake;
     }
 
     function reset() private {
