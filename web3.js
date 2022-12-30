@@ -2,7 +2,7 @@ const Web3 = require('web3')
 var web3 = new Web3(new Web3.providers.HttpProvider("https://eth-goerli.g.alchemy.com/v2/EKjjmJcgh_C9kN0RHFCGwSS1zA322EXw"));
 const mainAccount = "0x91cDa83c363A6F72f81A2041836b1e79b4a01Ab1";
 const otherAccount = "0xE2327Ed11E0F9a312EbDA5AF3bFbAF85C30163C1";
-const address = "0xb20Cf15A8fAb7c5DdD703e3565471f791f5206D1";
+const address = "0x3575b2006b0448B9E3cc147CCe097f8F90EA25E8";
 const ABI = [
 	{
 		"anonymous": false,
@@ -128,16 +128,10 @@ const ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "addStake",
-				"type": "uint256"
-			}
-		],
+		"inputs": [],
 		"name": "increaseStake",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
