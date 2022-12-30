@@ -137,11 +137,11 @@ contract RPS {
         return outcome;
     }
 
-    function resetExternal() external onlyOwner {
+    function resetExternal() public onlyOwner {
         reset();
     }
 
-    function increaseStake() external onlyOwner validBet payable {
+    function increaseStake() public onlyOwner validBet payable {
         stake += msg.value;
     }
 

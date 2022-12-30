@@ -291,11 +291,11 @@
 	},
 	"sources": {
 		"contracts/RPS.sol": {
-			"keccak256": "0x1db4dba62072c0dcd7b66dcd479a9831444db9601761166798666739e21cb808",
+			"keccak256": "0xca0a00f41a493f173171758e13a2f8c2bdc015af15123d7f54cf5fa999eaad30",
 			"license": "LGPL-3.0-only",
 			"urls": [
-				"bzz-raw://cd1a18017ada6157339d0c71d82a9df8c2f5633b406bdadd903aa4cf5d0fe99c",
-				"dweb:/ipfs/QmZoXc1UP1pDXyiRUWeQ2GDs6wHkCK52qZGD1ffnakcRUg"
+				"bzz-raw://5d8754f2a6c6a4bff0033392dcacd847a7f1da274061347efb5b8c13c91ad26c",
+				"dweb:/ipfs/QmdsYAHQf613gTbmLveuRUtYMi6xVA26bNw3cAg39AmjQc"
 			]
 		}
 	},
