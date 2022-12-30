@@ -141,8 +141,8 @@ contract RPS {
         reset();
     }
 
-    function increaseStake(uint addStake) external onlyOwner {
-        stake += addStake;
+    function increaseStake() external onlyOwner validBet payable {
+        stake += msg.value;
     }
 
     function reset() private {
