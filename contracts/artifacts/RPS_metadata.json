@@ -129,16 +129,10 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "addStake",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "increaseStake",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -297,11 +291,11 @@
 	},
 	"sources": {
 		"contracts/RPS.sol": {
-			"keccak256": "0xcb7e44b50d353fd1195a343f7d21b2a7297c4989f8859075bcd4fd810bb516c4",
+			"keccak256": "0x1db4dba62072c0dcd7b66dcd479a9831444db9601761166798666739e21cb808",
 			"license": "LGPL-3.0-only",
 			"urls": [
-				"bzz-raw://7405971b5648d26a369211fa066a20d63cca9e30452bb3569a3c4672fd3b10f0",
-				"dweb:/ipfs/QmNzZ8vyDVRBjnSsJTKEjmnhvSxpAbukPS88JmeTiEj22q"
+				"bzz-raw://cd1a18017ada6157339d0c71d82a9df8c2f5633b406bdadd903aa4cf5d0fe99c",
+				"dweb:/ipfs/QmZoXc1UP1pDXyiRUWeQ2GDs6wHkCK52qZGD1ffnakcRUg"
 			]
 		}
 	},
