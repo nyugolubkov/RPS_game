@@ -131,6 +131,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "addStake",
+						"type": "uint256"
+					}
+				],
+				"name": "increaseStake",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "player",
 						"type": "address"
@@ -212,6 +225,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "resetExternal",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -277,11 +297,11 @@
 	},
 	"sources": {
 		"contracts/RPS.sol": {
-			"keccak256": "0x0ea32feb17c8a99c57a0a04ad5f95d311209c864742e2820b0f59468bed64e48",
+			"keccak256": "0xcb7e44b50d353fd1195a343f7d21b2a7297c4989f8859075bcd4fd810bb516c4",
 			"license": "LGPL-3.0-only",
 			"urls": [
-				"bzz-raw://5081cd542f28feaf309e63efd0034ee7bd3cbe8ffcb65b392fa90be3bc857db8",
-				"dweb:/ipfs/QmaMChTgewUPtQcsvPJ8MTKmDKyUrYdskc4a5DpHqNTtwp"
+				"bzz-raw://7405971b5648d26a369211fa066a20d63cca9e30452bb3569a3c4672fd3b10f0",
+				"dweb:/ipfs/QmNzZ8vyDVRBjnSsJTKEjmnhvSxpAbukPS88JmeTiEj22q"
 			]
 		}
 	},
