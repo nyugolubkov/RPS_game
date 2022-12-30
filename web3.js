@@ -157,25 +157,105 @@ web3.eth.getBalance(otherAccount).then(console.log)
 const myContract = new web3.eth.Contract(ABI, address)
 const privateKey = "b2301c675fac36e9dfd994879b48a1ec4cdf6481f4230f9b43eec0b1f41a867d"
 const options = ['rock', 'paper', 'scissors']
-let choice = 'rock'
-let gameChoice = options.indexOf(choice) + 1;
+
+let playerOneChoice = 'rock'
+let playerOneGameChoice = options.indexOf(playerOneChoice) + 1;
 let saltOne = web3.utils.sha3("" + Math.random());
-let encoded = web3.eth.abi.encodeParameters(['uint256', 'bytes32'], [gameChoice, saltOne]);
-let hashOne = web3.utils.sha3(encoded, { encoding: 'hex' });
+let encodedOne = web3.eth.abi.encodeParameters(['uint256', 'bytes32'], [playerOneGameChoice, saltOne]);
+let hashOne = web3.utils.sha3(encodedOne, { encoding: 'hex' });
+console.log('Player one choice: ', playerOneChoice);
 console.log('Player one salt: ', saltOne);
 console.log('Player one hash: ', hashOne);
 
-const regGame = async() => {
-    if (hashOne !== undefined && hashOne !== null) {
-        const playerOneRegTX = {
-            from: mainAccount,
+let playerTwoChoice = 'scissors'
+let playerTwoGameChoice = options.indexOf(playerTwoChoice) + 1;
+let saltTwo = web3.utils.sha3("" + Math.random());
+let encodedTwo = web3.eth.abi.encodeParameters(['uint256', 'bytes32'], [playerTwoGameChoice, saltTwo]);
+let hashTwo = web3.utils.sha3(encodedTwo, { encoding: 'hex' });
+console.log('Player two choice: ', playerTwoChoice);
+console.log('Player two salt: ', saltTwo);
+console.log('Player two hash: ', hashTwo);
+
+async function regGame(account) {
+    let regTX = {
+        from: account,
+        to: address,
+        gas: 100000,
+        value: 10000,
+        data: myContract.methods.regPlayer().encodeABI()
+    }
+    let regSignature = await web3.eth.accounts.signTransaction(regTX, privateKey);
+    web3.eth.sendSignedTransaction(regSignature.rawTransaction).catch(err => console.log(err));
+    console.log('Player has registered');
+}
+
+async function commitMove(hash, account) {
+    if (hash !== undefined && hash !== null) {
+        let commitTX = {
+            from: account,
             to: address,
-            gas: 50000,
-            value: "10000",
-            data: myContract.methods.regPlayer().encodeABI()
+            gas: 100000,
+            value: 10000,
+            data: myContract.methods.commitMove(hash).encodeABI()
         }
-        const playerOneRegSignature = await web3.eth.accounts.signTransaction(playerOneRegTX, privateKey);
-        web3.eth.sendSignedTransaction(playerOneRegSignature.rawTransaction).catch(err => console.log(err));
+        let commitSignature = await web3.eth.accounts.signTransaction(commitTX, privateKey);
+        web3.eth.sendSignedTransaction(commitSignature.rawTransaction).catch(err => console.log(err));
+        console.log('Player committed');
     }
 }
-regGame();
+
+async function revealChoice(choice, salt, account) {
+    let revealTX = {
+        from: account,
+        to: address,
+        gas: 100000,
+        value: 10000,
+        data: myContract.methods.revealChoice(choice, salt).encodeABI()
+    }
+    let revealSignature = await web3.eth.accounts.signTransaction(revealTX, privateKey);
+    web3.eth.sendSignedTransaction(revealSignature.rawTransaction).catch(err => console.log(err));
+    console.log('Player has revealed');
+}
+
+async function endGame(account) {
+    let endTX = {
+        from: account,
+        to: address,
+        gas: 100000,
+        value: 10000,
+        data: myContract.methods.endGames().encodeABI()
+    }
+    let endSignature = await web3.eth.accounts.signTransaction(endTX, privateKey);
+    web3.eth.sendSignedTransaction(endSignature.rawTransaction).on('receipt', function(receipt){
+        outCome = receipt.events.GetGameOutcome.returnValues[0];
+        if(outCome == 0) {
+            console.log('It is a draw');
+        } else if(outCome == 1) {
+            console.log('Player One Wins');
+        } else if(outCome == 2) {
+            console.log('Player Two Wins');
+        } else {
+            console.log('Problem with game');
+        }
+    }).catch(err => console.log(err));
+    console.log('Player has ended');
+}
+
+let regPromises = [];
+regPromises.push(regGame(mainAccount));
+regPromises.push(regGame(otherAccount));
+Promise.all(regPromises).then(function() {
+    let commitPromises = [];
+    commitPromises.push(commitMove(hashOne, mainAccount));
+    commitPromises.push(commitMove(hashTwo, otherAccount));
+    
+    Promise.all(commitPromises).then(function() {
+        let revealPromises = [];
+        revealPromises.push(revealChoice(playerOneGameChoice, saltOne, mainAccount));
+        revealPromises.push(revealChoice(playerTwoGameChoice, saltTwo, otherAccount));
+    
+        Promise.all(revealPromises).then(function() {
+            endGame(mainAccount);
+        })
+    })
+})
